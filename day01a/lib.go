@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// Process looks for two numbers from the input that sum to the target
 func Process(in io.Reader, target int) (int, error) {
 	var numbers []int
 
