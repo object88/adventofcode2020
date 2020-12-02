@@ -45,7 +45,7 @@ func Process(in io.Reader, target int) (int, error) {
 
 	// Example:
 	// target: 21
-	// numbers: [ 1, 2, 5, 19, 34, 46]
+	// numbers: [ 1, 2, 5, 19, 34, 46 ]
 	// i = 0; j = 5; numbers[i] = 1; numbers[j] = 46; sum = 47 => decrement j
 	// i = 0; j = 4; numbers[i] = 1; numbers[j] = 34; sum = 35 => decrement j
 	// i = 0; j = 3; numbers[i] = 1; numbers[j] = 19; sum = 20 => increment i

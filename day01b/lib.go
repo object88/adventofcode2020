@@ -30,7 +30,6 @@ func Process(in io.Reader, target int) (int, error) {
 }
 
 func processNumbers(numbers []int, target int) (int, error) {
-
 	// This technique operates on very rough O(n^3). This is written for
 	// simplicity.
 	// for i := 0; i < len(numbers); i++ {
@@ -46,42 +45,33 @@ func processNumbers(numbers []int, target int) (int, error) {
 
 	// return -1, fmt.Errorf("Failed to find combination")
 
-	// The above solution is certainly not the fastest mechanism. We _should_ walk inwards from
-	// both sides of a sorted array. As these numbers are already sorted, we
-	// should be able to take a look at some specified indexes, starting with 0
-	// and `len(numbers)-1`. If the sum is too large, then we walk decrement the
-	// upper index. If the sum is too small, we increment the lower index
-
-	// Example:
-	// target: 59
-	// numbers: [ 1, 2, 5, 19, 34, 46, 52, 67]
-	// i = 0; j = 1; k = 7; numbers[i] = 1; numbers[j] = 2; numbers[k] = 67; sum(i,j,k) = 70 => decrement k
-	// i = 0; j = 1; k = 6; numbers[i] = 1; numbers[j] = 2; numbers[k] = 52; sum(i,j,k) = 55 => sum(j,k) = 54 => increment j
-	// i = 0; j = 2; k = 6; numbers[i] = 1; numbers[j] = 5; numbers[k] = 52; sum(i,j,k) = 58 => sum(j,k) = 53 => increment i
-	// i = 1; j = 2; k = 6; numbers[i] = 2; numbers[j] = 5; numbers[k] = 52; sum(i,j,k) = 59 => MATCH
+	// The above solution is certainly not the fastest mechanism. We can loop
+	// over a part of the array from both sides, while holding a third index
+	// steady.
 
 	sort.Ints(numbers)
 
-	i := 0
-	j := 1
-	k := len(numbers) - 1
-	for {
-		if i >= j || j >= k {
-			// This should not happen with a good data set.
-			return -1, fmt.Errorf("Invalid data set")
-		}
-
+	for i := 0; i < len(numbers); i-- {
 		x0 := numbers[i]
-		x1 := numbers[j]
-		x2 := numbers[k]
-		if x0+x1+x2 == target {
-			return x0 * x1 * x2, nil
-		} else if x0+x1+x2 > target {
-			k--
-		} else if x1+x2 < target {
-			j++
-		} else {
-			i++
+		target0 := target - x0
+
+		j := i + 1
+		k := len(numbers) - 1
+		for {
+			if i == j {
+				break
+			}
+			x1 := numbers[j]
+			x2 := numbers[k]
+			if x1+x2 == target0 {
+				return x0 * x1 * x2, nil
+			} else if x1+x2 > target0 {
+				k--
+			} else {
+				j++
+			}
 		}
 	}
+
+	return -1, fmt.Errorf("failed")
 }
